@@ -1,0 +1,149 @@
+feature,importance
+num__MCC,0.2521736996733115
+cat__Merchant State_Italy,0.23261567591647594
+num__Year,0.0972049211163769
+num__Amount,0.08637965135818815
+cat__Merchant State_Missing,0.06682529961348786
+cat__Use Chip_Online Transaction,0.06382190464745469
+num__Zip,0.04143615505661522
+num__Hour,0.03507057240631026
+cat__Merchant State_Algeria,0.026512823196501185
+cat__Merchant State_Nigeria,0.021956080002147278
+num__Day,0.015356248417117238
+cat__Merchant State_Haiti,0.010708450385594624
+cat__Merchant State_Turkey,0.009800195698776661
+cat__Merchant State_WA,0.009186597579652562
+num__Month,0.008916549125341101
+cat__Merchant State_MS,0.007518463505621764
+cat__Merchant State_Mexico,0.0028390482335840634
+cat__Merchant State_AZ,0.0019146195164046144
+cat__Use Chip_Chip Transaction,0.0018591883795489388
+cat__Use Chip_Swipe Transaction,0.0016729535305560366
+cat__Merchant State_OH,0.0012295904470602215
+cat__Merchant State_KY,0.0008325496700080005
+cat__Merchant State_FL,0.0007251010304785661
+cat__Errors?_Technical Glitch,0.0006202154458302552
+cat__Merchant State_MA,0.0005679385144771431
+cat__Merchant State_TX,0.0005591917546645027
+cat__Errors?_Insufficient Balance,0.0004858290045036742
+cat__Errors?_Bad CVV,0.0003456816305392326
+cat__Merchant State_IL,0.00024049497040510976
+cat__Errors?_Missing,0.00016207705709859723
+cat__Merchant State_Jamaica,0.0001430059865238832
+cat__Merchant State_IA,8.383371238787097e-05
+cat__Merchant State_Japan,7.029523704369628e-05
+cat__Merchant State_CA,4.3794303658989285e-05
+cat__Merchant State_NE,3.7538883604278496e-05
+cat__Merchant State_NY,3.181528911770877e-05
+cat__Merchant State_NC,2.6038781573212834e-05
+cat__Merchant State_MI,1.8466664734292732e-05
+cat__Merchant State_PA,3.982579939400417e-06
+cat__Merchant State_NJ,3.4616772849354395e-06
+cat__Merchant State_Aruba,0.0
+cat__Merchant State_AR,0.0
+cat__Merchant State_AK,0.0
+cat__Merchant State_AL,0.0
+cat__Merchant State_Bahrain,0.0
+cat__Merchant State_Azerbaijan,0.0
+cat__Merchant State_Austria,0.0
+cat__Merchant State_Australia,0.0
+cat__Merchant State_CT,0.0
+cat__Merchant State_Dominica,0.0
+cat__Merchant State_DE,0.0
+cat__Merchant State_Denmark,0.0
+cat__Merchant State_ID,0.0
+cat__Merchant State_Hungary,0.0
+cat__Merchant State_Hong Kong,0.0
+cat__Merchant State_Honduras,0.0
+cat__Merchant State_Greece,0.0
+cat__Merchant State_HI,0.0
+cat__Merchant State_Germany,0.0
+cat__Merchant State_Ghana,0.0
+cat__Merchant State_Finland,0.0
+cat__Merchant State_Eritrea,0.0
+cat__Merchant State_GA,0.0
+cat__Merchant State_France,0.0
+cat__Merchant State_Dominican Republic,0.0
+cat__Merchant State_Ireland,0.0
+cat__Merchant State_Indonesia,0.0
+cat__Merchant State_IN,0.0
+cat__Merchant State_MD,0.0
+cat__Merchant State_Luxembourg,0.0
+cat__Merchant State_Lithuania,0.0
+cat__Merchant State_LA,0.0
+cat__Merchant State_KS,0.0
+cat__Merchant State_Belgium,0.0
+cat__Merchant State_Brazil,0.0
+cat__Merchant State_CO,0.0
+cat__Merchant State_Colombia,0.0
+cat__Merchant State_Costa Rica,0.0
+cat__Merchant State_Cote d'Ivoire,0.0
+cat__Merchant State_Czech Republic,0.0
+cat__Merchant State_DC,0.0
+cat__Merchant State_Cabo Verde,0.0
+cat__Merchant State_Canada,0.0
+cat__Merchant State_China,0.0
+cat__Merchant State_NH,0.0
+cat__Merchant State_ND,0.0
+cat__Merchant State_Mongolia,0.0
+cat__Merchant State_Morocco,0.0
+cat__Merchant State_MO,0.0
+cat__Merchant State_MN,0.0
+cat__Merchant State_MT,0.0
+cat__Merchant State_Malaysia,0.0
+cat__Merchant State_ME,0.0
+cat__Merchant State_Israel,0.0
+cat__Merchant State_India,0.0
+cat__Merchant State_Norway,0.0
+cat__Merchant State_Nauru,0.0
+cat__Merchant State_Netherlands,0.0
+cat__Merchant State_NV,0.0
+cat__Merchant State_NM,0.0
+cat__Merchant State_Poland,0.0
+cat__Merchant State_Portugal,0.0
+cat__Merchant State_RI,0.0
+cat__Merchant State_Russia,0.0
+cat__Merchant State_SC,0.0
+cat__Merchant State_SD,0.0
+cat__Merchant State_Saudi Arabia,0.0
+cat__Merchant State_Singapore,0.0
+cat__Merchant State_Slovenia,0.0
+cat__Merchant State_New Zealand,0.0
+cat__Merchant State_OR,0.0
+cat__Merchant State_OK,0.0
+cat__Merchant State_Oman,0.0
+cat__Merchant State_Pakistan,0.0
+cat__Merchant State_Peru,0.0
+cat__Merchant State_Philippines,0.0
+cat__Merchant State_Switzerland,0.0
+cat__Merchant State_Sweden,0.0
+cat__Merchant State_Sudan,0.0
+cat__Merchant State_Sri Lanka,0.0
+cat__Merchant State_Spain,0.0
+cat__Merchant State_South Korea,0.0
+cat__Merchant State_South Africa,0.0
+cat__Merchant State_Taiwan,0.0
+cat__Merchant State_UT,0.0
+cat__Merchant State_United Arab Emirates,0.0
+cat__Merchant State_Uruguay,0.0
+cat__Merchant State_United Kingdom,0.0
+cat__Merchant State_Thailand,0.0
+cat__Merchant State_The Bahamas,0.0
+cat__Merchant State_Trinidad and Tobago,0.0
+cat__Merchant State_TN,0.0
+cat__Merchant State_Vietnam,0.0
+cat__Merchant State_Vatican City,0.0
+cat__Merchant State_VT,0.0
+cat__Merchant State_VA,0.0
+cat__Merchant State_Zimbabwe,0.0
+cat__Merchant State_WI,0.0
+cat__Merchant State_WY,0.0
+cat__Merchant State_WV,0.0
+cat__Errors?_Bad Card Number,0.0
+"cat__Errors?_Bad CVV,Technical Glitch",0.0
+"cat__Errors?_Bad CVV,Insufficient Balance",0.0
+cat__Errors?_Bad Expiration,0.0
+cat__Errors?_Bad Zipcode,0.0
+"cat__Errors?_Bad PIN,Insufficient Balance",0.0
+cat__Errors?_Bad PIN,0.0
+"cat__Errors?_Insufficient Balance,Technical Glitch",0.0

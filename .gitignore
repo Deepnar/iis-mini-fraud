@@ -1,0 +1,25 @@
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Data caches (large, reproducible via kagglehub)
+~/.cache/
+*.cache
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Keep code, report, small outputs + small model.
+# NOTE: person1_outputs/sample_*.parquet (1.7MB) and best_rf_model.joblib (2.1MB)
+# are intentionally TRACKED (small + reproducible).

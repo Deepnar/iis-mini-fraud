@@ -1,0 +1,21 @@
+feature,importance
+num__Zip,0.23834941608049595
+num__MCC,0.10542263775736337
+num__Amount,0.08791176495533241
+num__Year,0.08445930193575285
+cat__Use Chip_Online Transaction,0.0677858781339902
+num__Hour,0.067415436519053
+cat__Merchant State_Italy,0.06640489795665684
+cat__Merchant State_Missing,0.05579023173901063
+num__Day,0.037232902599668244
+cat__Use Chip_Swipe Transaction,0.0338532360357738
+num__Month,0.03098837678851946
+cat__Merchant State_OH,0.01959017161848465
+cat__Use Chip_Chip Transaction,0.013956988405318895
+cat__Merchant State_CA,0.00794705205585682
+cat__Merchant State_Mexico,0.007435008163891586
+cat__Merchant State_FL,0.007341613429505847
+cat__Merchant State_NY,0.0066828919674449885
+cat__Merchant State_TX,0.004422598914635228
+cat__Merchant State_Nigeria,0.004413241126348939
+cat__Merchant State_Algeria,0.0037885421565959374
