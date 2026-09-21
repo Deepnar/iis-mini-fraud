@@ -190,7 +190,158 @@ cross-border + error-prone transactions are riskiest.
 * Plots: `pr_curves_val.png`, `pr_curve_test_best.png`,
   `feature_importance_full.png`. Tables: `person1_full_results.csv`.
 
-## 5. Conclusions for the team comparison
+## 5. Experiment insights — what the numbers actually say
+
+### 5.1 Class weighting is a recall knob, not a quality boost
+
+* LogReg: `R 0.06 → 0.84`, `P 0.75 → 0.007`, PR-AUC `0.17 → 0.21`. It works
+  exactly as theory predicts: the optimizer stops ignoring the minority class,
+  but with a linear boundary it can only do so by flagging ~6000 legit rows.
+* RF d10: `PR-AUC 0.49 → 0.19`, `FP 0 → 763`. Same knob, opposite verdict on
+  ranking quality. With only 147 train frauds, forcing each bootstrap to care
+  equally about fraud makes shallow trees split on noise.
+* Takeaway: never report "balanced is better" unconditionally. Report the
+  trade: balancing buys recall with precision currency, and whether PR-AUC
+  survives depends on model capacity. This is the single most important
+  message for Person 3's imbalance study.
+
+### 5.2 Depth vs data scarcity: shallow wins because fraud is rare
+
+* Balanced RF improves with depth (d10 0.19 → d20 0.31 → dNone 0.34) because
+  deeper trees can isolate rare fraud pockets without polluting every leaf.
+* But nothing beats `d10 + original distribution` (0.49). A shallow tree on
+  natural data learns "only flag ultra-suspicious leaves", which is the right
+  prior at 0.12% fraud.
+* Prediction for Person 2: XGBoost/LightGBM will show the same pattern —
+  unconstrained `max_depth` + `scale_pos_weight` will overfit 147 frauds.
+  They should start shallow (`max_depth 3–6`), tune `min_child_weight` /
+  `subsample` first, and treat `scale_pos_weight` like our `class_weight`
+  (recall knob, watch PR-AUC).
+
+### 5.3 Regularization cliff in LogReg (C sweep)
+
+* C=0.01/0.1 orig: R=0, PR-AUC 0.04–0.16 — model collapses to "all legit".
+* C=1→10 orig: R 0.06→0.14, PR-AUC flat ~0.17. More capacity helps a little,
+  then plateaus: the linear family is exhausted, not the optimizer.
+* Balanced C sweep is flat in PR-AUC (0.05→0.21) but recall saturates at ~0.84
+  from C=0.1 upward — extra C only adds FPs. So for LogReg the practical choice
+  is C=1–10 + decision-threshold tuning, not larger C.
+
+### 5.4 Threshold moves operating point, not model quality
+
+* PR-AUC is threshold-independent (0.494 val / 0.618 test regardless of 0.5
+  vs 0.24). Precision/Recall/F1 are threshold-dependent.
+* Our gain (TEST F1 0.59→0.67, R 0.43→0.59, FP 1→8) cost zero retraining.
+* Business reading: at 0.5 the model is a "high-confidence alarm" (1 FP per
+  40k); at 0.24 it is a "review queue" (8 FP per 40k, catches 60% of fraud).
+  The team must pick the operating point by FP budget, not by default 0.5.
+  Every Person 2/3 model needs its own tuned threshold before comparison —
+  comparing all at 0.5 would be unfair.
+
+### 5.5 Feature importance tells the fraud story
+
+* `MCC (0.25)` + `Italy (0.23)` + `Missing state (0.07)` + `Online (0.06)` =
+  ~60% of splits. Fraud is not "big amounts" (Amount only 0.086) — it is
+  *where + how*: specific merchant categories, cross-border / missing
+  geography, card-not-present channel.
+* `Year (0.097)` matters because fraud rate drifts by year (peaks 2008/2010/
+  2016) — a time-split validation would be a good Person 3 extension.
+* `Algeria/Nigeria` flags with small but nonzero importance suggest
+  cross-border signal beyond Italy; collapsing rare states into "Other/Foreign"
+  may generalize better than 223-way one-hot. Recommendation for the joint
+  pipeline: frequency-encode or group rare states instead of pure one-hot.
+
+### 5.6 Compute lessons: what scaled and what didn't
+
+* `n_estimators` 200→300: PR-AUC identical (0.306). 200 trees is enough;
+  spend budget on depth/split/weight grid instead.
+* `min_samples_split` 2→5 at d20: 0.306→0.333 (small win, fewer noisy leaves).
+* `max_features=sqrt`: P 0.08→0.23 at same recall — decorrelating trees helps
+  precision most. Worth trying in Person 2 (`colsample_bytree`).
+* `balanced_subsample` (0.297) < `balanced` (0.306): rebalancing each bootstrap
+  separately added variance on 147 frauds. Prefer global weighting at this scale.
+
+### 5.7 Val vs test gap is variance, not magic
+
+* Best model: val PR-AUC 0.494 → test 0.618. With 49 frauds per split, ±0.05
+  swings are expected (CV std was ±0.03 on train). Do NOT claim "test beats val
+  so model generalizes better" — claim "PR-AUC ~0.5–0.6 band given sample size".
+* Implication for final team comparison: all members must evaluate on the SAME
+  locked test set with the SAME sample seed, otherwise differences smaller than
+  ~0.05 PR-AUC are noise. Person 3 should also report confidence intervals.
+
+## 6. Material for the mega main report (copy-paste ready)
+
+### 6.1 One-paragraph dataset description (use verbatim)
+
+> Experiments use the IBM synthetic credit-card transaction dataset
+> (`credit_card_transactions-ibm_v2.csv`, 24,386,900 rows, 29,757 fraud,
+> 0.122%). Each row holds transaction time (Year/Month/Day/Time), Amount,
+> channel (Swipe/Chip/Online), merchant geography and MCC (109 codes), and an
+> optional processing error. Targets are `Is Fraud? Yes/No`. Card and user
+> attributes are available in auxiliary tables but unused in baselines. Modeling
+> uses a uniform 200k-row stratified sample preserving the 0.12% fraud rate
+> (train 120k / val 40k / test 40k), with preprocessing fit on train only.
+
+### 6.2 One-paragraph method description (use verbatim)
+
+> Person 1 establishes classical baselines. Numeric features are standardized
+> and categoricals one-hot encoded inside a train-fit pipeline. Logistic
+> Regression (L2, lbfgs, C sweep, orig vs balanced) and Random Forest
+> (200–300 trees, depth/split/feature/weight grid) are compared by PR-AUC on
+> validation, then threshold-tuned by max-F1 on the PR curve and evaluated once
+> on a locked test set (Precision/Recall/F1/PR-AUC/confusion matrix).
+
+### 6.3 Rows for the joint comparison table
+
+| Model | Imbalance strategy | P | R | F1 | PR-AUC |
+|---|---|---:|---:|---:|---:|
+| LogReg C10 | Original | 0.875 | 0.143 | 0.246 | 0.169 |
+| LogReg C10 | Class weight balanced | 0.007 | 0.837 | 0.014 | 0.206 |
+| RF d10/200 | Original | 0.955 | 0.429 | 0.592 | 0.618 |
+| RF d10/200 thr 0.24 | Original + threshold | 0.784 | 0.592 | 0.674 | 0.618 |
+| XGBoost | (Person 2 fills) | — | — | — | — |
+| LightGBM | (Person 2 fills) | — | — | — | — |
+| Best sampling/SMOTE | (Person 3 fills) | — | — | — | — |
+
+(TEST split values; val values in §4 for method appendix.)
+
+### 6.4 Three claims the main report can make (with numbers)
+
+1. "Classical RF strongly outperforms linear LogReg (TEST PR-AUC 0.62 vs 0.21),
+   showing fraud is interaction-driven (channel × geography × MCC), not linearly
+   separable."
+2. "Class weighting trades precision for recall and does not always raise
+   PR-AUC: LogReg R 0.06→0.84 (PR-AUC 0.17→0.21) but RF-d10 PR-AUC 0.49→0.19.
+   Imbalance handling must be evaluated per algorithm."
+3. "Threshold tuning on the PR curve is the cheapest win: same RF model
+   F1 0.59→0.67 and recall 0.43→0.59 (8 FP per 40k) with no retraining."
+
+### 6.5 Recommendations to Person 2 and Person 3
+
+* Person 2: start XGBoost shallow (`max_depth 3–6`, `min_child_weight` high),
+  grid `scale_pos_weight` like our `class_weight` (expect same recall/precision
+  trade), tune `subsample/colsample_bytree` (our `sqrt` win suggests it helps),
+  always threshold-tune before comparing to our 0.24 operating point.
+* Person 3: our result (balancing hurts shallow-RF ranking) is your null
+  hypothesis — test whether undersampling ratios (100:1 → 10:1) or SMOTE beat
+  plain class weights on the SAME RF config and SAME test set; report PR-AUC +
+  tuned-threshold F1, not accuracy; include CIs given ~49 test frauds.
+* Joint: freeze the 200k sample seed + test indices before comparing, or
+  PR-AUC deltas < 0.05 are indistinguishable from sampling noise.
+
+### 6.6 Limitations to state honestly in the main report
+
+* Only 245 frauds in the modeling sample (147 train) — wide CIs, spoke models
+  may reorder at 1M+ rows.
+* One-hot over 223 noisy states risks overfitting rare geographies; rare-state
+  grouping / target encoding is future work.
+* Cards/users tables unused — joining credit-limit/FICO/dark-web flags may add
+  signal.
+* Time drift (fraud peaks 2008/2010/2016) unmodeled — time-based split is a
+  recommended extension.
+
+## 7. Conclusions for the team comparison
 
 1. Classical ML works: RF PR-AUC 0.62 vs LogReg 0.21 on the same sample.
 2. Class weighting is not universally good: it rescues LogReg recall
@@ -202,7 +353,7 @@ cross-border + error-prone transactions are riskiest.
    wide (±0.03 CV). Scale winning configs to 1M+ rows before the joint
    Person 1/2/3 final table.
 
-## 6. Reproduce (Linux + uv)
+## 8. Reproduce (Linux + uv)
 
 ```bash
 uv python pin 3.12
@@ -215,7 +366,7 @@ uv run python 03_person1_full.py --n-sample 200000
 
 Outputs land in `person1_outputs/`. Re-running `03` is instant (uses cached parquet).
 
-## 7. Files in this repo
+## 9. Files in this repo
 
 * `download_dataset.py` — kagglehub download
 * `01_inspect.py` — chunked full-file inspection (24M rows, no RAM blowup)
