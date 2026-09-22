@@ -23,3 +23,13 @@ Thumbs.db
 # Keep code, report, small outputs + small model.
 # NOTE: person1_outputs/sample_*.parquet (1.7MB) and best_rf_model.joblib (2.1MB)
 # are intentionally TRACKED (small + reproducible).
+
+# Person 3 safety: NEVER commit raw / large datasets (regenerate via scripts)
+credit_card_transactions-ibm_v2.csv
+train.csv
+test.csv
+*.log
+*.csv
+!person1_outputs/*.csv
+!person3_outputs/*.csv
+

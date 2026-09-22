@@ -1,0 +1,5 @@
+experiment,precision_fraud,recall_fraud,f1_fraud,pr_auc,TN,FP,FN,TP
+A_baseline,1.0,0.377,0.5476,0.6976,99878,0,76,46
+B_undersample_0.05,0.2299,0.6803,0.3437,0.5542,99600,278,39,83
+C_smote_0.1,0.7975,0.5164,0.6269,0.6654,99862,16,59,63
+D_class_weight_balanced,0.9828,0.4672,0.6333,0.7013,99877,1,65,57
